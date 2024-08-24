@@ -1,10 +1,16 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 local response = false
-local localVer = 3.4
+local localVer = 3.5
 local scriptName = "AFK_OP_Money"
 local versionCheckInterval = 60000 -- 1 minuto
 local updateButtonCreated = false 
 
+--nombre y version
+menu.divider(menu.my_root(), scriptName .. " v" .. localVer)
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function latiao_server_TRANSACTION(hash, amount)
     SET_INT_GLOBAL(4537311 + 1, 2147483646)
@@ -640,12 +646,6 @@ util.create_thread(function()
         util.yield(versionCheckInterval)
     end
 end)
-
---nombre y version
-menu.divider(menu.my_root(), scriptName .. " v" .. localVer)
-
-
-
 
 
 -- script info
