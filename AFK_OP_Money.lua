@@ -1,5 +1,5 @@
 local response = false
-local localVer = 3.3
+local localVer = 3.4
 local scriptName = "AFK_OP_Money"
 local versionCheckInterval = 60000 -- 1 minuto
 local updateButtonCreated = false 
@@ -568,7 +568,7 @@ end
 
 --verificar la versión disponible
 local function checkForUpdates()
-    async_http.init("raw.githubusercontent.com", "/j-11-t/OP-Money-prueba/main/AKF_OP_Money_Version.lua", function(output)
+    async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/AKF_OP_Money_Version.lua", function(output)
         local currentVer = tonumber(output)
         if currentVer and localVer ~= currentVer then
             -- Muestra nueva version disponible
@@ -576,11 +576,11 @@ local function checkForUpdates()
             if not updateButtonCreated then
                 menu.action(menu.my_root(), "Actualizar Lua", {}, "", function()
                     -- Verifica antes de descargar
-                    async_http.init("raw.githubusercontent.com", "/j-11-t/OP-Money-prueba/main/AKF_OP_Money_Version.lua", function(newVersionOutput)
+                    async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/AKF_OP_Money_Version.lua", function(newVersionOutput)
                         local latestVer = tonumber(newVersionOutput)
                         if latestVer and localVer ~= latestVer then
                             -- Descarga la nueva version
-                            async_http.init('raw.githubusercontent.com', '/j-11-t/OP-Money-prueba/main/AFK_OP_Money.lua', function(a)
+                            async_http.init('raw.githubusercontent.com', '/j-11-t/OP_Money/main/AFK_OP_Money.lua', function(a)
                                 if not a or a == "" then
                                     util.toast("Hubo un fallo al descargar el script. Por favor, actualiza manualmente desde GitHub.")
                                     return
@@ -619,7 +619,7 @@ end
 
 --KillSwitch
 local function checkKillSwitch()
-    async_http.init("raw.githubusercontent.com", "/j-11-t/OP-Money-prueba/main/Kill_Switch.lua", function(output)
+    async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/Kill_Switch.lua", function(output)
         local currentKs = tostring(output)
         if currentKs == "true" then
             util.toast("[" .. scriptName .. "] Script desactivado por seguridad :D")
@@ -657,7 +657,7 @@ menu.readonly(scriptInfoMenu, "Versión", localVer)
 
 -- verificar actualizaciones manual
 menu.action(scriptInfoMenu, "Buscar Actualización", {}, "El script verificará automáticamente actualizaciones cada minuto, pero puedes hacerlo manualmente con esta opción.", function()
-    async_http.init("raw.githubusercontent.com", "/j-11-t/OP-Money-prueba/main/AKF_OP_Money_Version.lua", function(output)
+    async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/AKF_OP_Money_Version.lua", function(output)
         local currentVer = tonumber(output)
         if currentVer and localVer ~= currentVer then
             util.toast("[" .. scriptName .. "] Hay una actualización disponible: v" .. currentVer .. ". Actualiza lo más pronto posible :D")
