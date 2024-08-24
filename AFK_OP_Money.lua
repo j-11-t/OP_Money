@@ -629,7 +629,7 @@ local function checkKillSwitch()
         local currentKs = tostring(output)
         if currentKs == "true" then
             util.toast("[" .. scriptName .. "] Script desactivado por seguridad :D")
-            util.yield(2000)
+            util.yield(500)
             util.stop_script()
         end
     end, function()
