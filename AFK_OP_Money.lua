@@ -2,10 +2,12 @@
 
 
 local response = false
-local localVer = 4.2
+local localVer = 4.3
 local scriptName = "AFK_OP_Money"
 local versionCheckInterval = 300000 -- 5 minutos
-local updateButtonCreated = false 
+local updateButtonCreated = false
+local updateAvailable = false
+local updateManualButton
 
 --nombre y version
 menu.divider(menu.my_root(), scriptName .. " v" .. localVer)
@@ -560,10 +562,15 @@ end)
 
 
 -- local response = false
--- local localVer = 3.3
+-- local localVer = 4.1
 -- local scriptName = "AFK_OP_Money"
 -- local versionCheckInterval = 300000 -- 5 minutos
--- local updateButtonCreated = false 
+-- local updateButtonCreated = false
+-- local updateAvailable = false
+-- local updateManualButton
+
+-- --nombre y version
+-- menu.divider(menu.my_root(), scriptName .. " v" .. localVer)
 
 --noti de version y activar acceso a internet
 util.toast("Versión: " .. localVer)
@@ -579,6 +586,7 @@ local function checkForUpdates()
         if currentVer and localVer ~= currentVer then
             -- Muestra nueva version disponible
             util.toast("[" .. scriptName .. "] Hay una actualización disponible: v" .. currentVer .. " Actualiza lo más pronto posible :D")
+            updateAvailable = true
             if not updateButtonCreated then
                 menu.action(menu.my_root(), "Actualizar Lua", {}, "", function()
                     -- Verifica antes de descargar
@@ -616,6 +624,7 @@ local function checkForUpdates()
                 updateButtonCreated = true
             end
         else
+            updateAvailable = false
         end
     end, function() 
         util.toast("Error al verificar la versión.")
@@ -647,7 +656,6 @@ util.create_thread(function()
     end
 end)
 
-
 -- script info
 local scriptInfoMenu = menu.list(menu.my_root(), "Acerca de AFK_OP_Money", {}, "Información y opciones sobre el script.")
 
@@ -656,13 +664,21 @@ menu.divider(scriptInfoMenu, "AFK_OP_Money")
 menu.readonly(scriptInfoMenu, "Versión", localVer)
 
 -- verificar actualizaciones manual
-menu.action(scriptInfoMenu, "Buscar actualización", {}, "El script verificará automáticamente actualizaciones cada 5 minutos, pero puedes hacerlo manualmente con esta opción.", function()
+menu.action(scriptInfoMenu, "Buscar Actualización", {}, "El script verificará automáticamente actualizaciones cada 5 minutos, pero puedes hacerlo manualmente con esta opción.", function()
     async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/AKF_OP_Money_Version.lua", function(output)
         local currentVer = tonumber(output)
         if currentVer and localVer ~= currentVer then
-            util.toast("[" .. scriptName .. "] Hay una actualización disponible: v" .. currentVer .. ". Actualiza lo más pronto posible :D")
+            util.toast("[" .. scriptName .. "] Hay una actualización disponible: v" .. currentVer .. " Actualiza lo más pronto posible :D")
+            updateAvailable = true
+            if updateManualButton then
+                menu.set_visible(updateManualButton, true) -- Habilitar el botón de actualización manual si hay una nueva versión disponible
+            end
         else
-            util.toast("[" .. scriptName .. "] Tu script ya está actualizado a v" .. localVer .. ".")
+            util.toast("[" .. scriptName .. "] Tu script ya está actualizado a v" .. localVer .. "")
+            updateAvailable = false
+            if updateManualButton then
+                menu.set_visible(updateManualButton, false) -- Ocultar el botón si no hay una nueva versión disponible
+            end
         end
     end, function()
         util.toast("Error al verificar la versión.")
@@ -670,9 +686,40 @@ menu.action(scriptInfoMenu, "Buscar actualización", {}, "El script verificará 
     async_http.dispatch()
 end)
 
+-- segundo botón de actualización (siempre visible pero inactivo)
+updateManualButton = menu.action(scriptInfoMenu, "Actualizar a " .. localVer .. "", {}, "Actualiza a la version más reciente." .. localVer .. "", function()
+    if updateAvailable then
+        async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/AFK_OP_Money.lua", function(a)
+            if not a or a == "" then
+                util.toast("Hubo un fallo al descargar el script. Por favor, actualiza manualmente desde GitHub.")
+                return
+            end
+            
+            -- Guardado y notificación de versión
+            local filePath = filesystem.scripts_dir() .. SCRIPT_RELPATH
+            local f = io.open(filePath, "wb")
+            if f then
+                f:write(a)
+                f:close()
+                util.toast("Script actualizado a v" .. localVer .. " Excelente :D")
+                util.restart_script()
+            else
+                util.toast("Error al guardar el script. Por favor, actualiza manualmente")
+            end
+        end)
+        async_http.dispatch()
+    else
+        util.toast("No hay actualizaciones disponibles en este momento.")
+    end
+end)
+
+-- Deshabilitar el botón al inicio
+menu.set_visible(updateManualButton, false)
+
 -- Enlaces
-menu.hyperlink(scriptInfoMenu, "Codigo fuente en GitHub", "https://github.com/j-11-t/AFK_OP_Money", "Ver los archivos fuente en GitHub")
-menu.hyperlink(scriptInfoMenu, "Servidor de discord", "https://discord.gg/tu_enlace_de_discord", "Únete al servidor de Discord")
+menu.hyperlink(scriptInfoMenu, "Tutorial de YouTube", "https://www.youtube.com/watch?v=1fnf3iwSNTE&t=277s", "MIra el video para más información")
+menu.hyperlink(scriptInfoMenu, "Código Fuente en GitHub", "https://github.com/j-11-t/AFK_OP_Money", "Ver los archivos fuente en GitHub")
+menu.hyperlink(scriptInfoMenu, "Servidor de Discord", "https://discord.gg/tu_enlace_de_discord", "Únete al servidor de Discord")
 
 
 --seccion creditos
