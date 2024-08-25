@@ -2,7 +2,7 @@
 
 
 local response = false
-local localVer = 4
+local localVer = 4.1
 local scriptName = "AFK_OP_Money"
 local versionCheckInterval = 300000 -- 5 minutos
 local updateButtonCreated = false 
@@ -671,8 +671,8 @@ menu.action(scriptInfoMenu, "Buscar actualización", {}, "El script verificará 
 end)
 
 -- Enlaces
-menu.hyperlink(scriptInfoMenu, "Código Fuente en GitHub", "https://github.com/j-11-t/AFK_OP_Money", "Ver los archivos fuente en GitHub")
-menu.hyperlink(scriptInfoMenu, "Servidor de Discord", "https://discord.gg/tu_enlace_de_discord", "Únete al servidor de Discord")
+menu.hyperlink(scriptInfoMenu, "Codigo fuente en GitHub", "https://github.com/j-11-t/AFK_OP_Money", "Ver los archivos fuente en GitHub")
+menu.hyperlink(scriptInfoMenu, "Servidor de discord", "https://discord.gg/tu_enlace_de_discord", "Únete al servidor de Discord")
 
 
 --seccion creditos
