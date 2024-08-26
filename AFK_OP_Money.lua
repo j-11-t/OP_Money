@@ -2,12 +2,13 @@
 
 
 local response = false
-local localVer = 4.5
+local localVer = 4.6
 local scriptName = "AFK_OP_Money"
 local versionCheckInterval = 300000 -- 5 minutos
 local updateButtonCreated = false
 local updateAvailable = false
 local updateManualButton
+local currentVer
 
 --nombre y version
 menu.divider(menu.my_root(), scriptName .. " v" .. localVer)
@@ -666,12 +667,13 @@ menu.readonly(scriptInfoMenu, "Versión", localVer)
 -- verificar actualizaciones manual
 menu.action(scriptInfoMenu, "Buscar Actualización", {}, "El script verificará automáticamente actualizaciones cada 5 minutos, pero puedes hacerlo manualmente con esta opción.", function()
     async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/AKF_OP_Money_Version.lua", function(output)
-        local currentVer = tonumber(output)
+        currentVer = tonumber(output) -- Almacena el valor de currentVer globalmente
         if currentVer and localVer ~= currentVer then
             util.toast("[" .. scriptName .. "] Hay una actualización disponible: v" .. currentVer .. " Actualiza lo más pronto posible :D")
             updateAvailable = true
             if updateManualButton then
                 menu.set_visible(updateManualButton, true) -- Habilitar el botón de actualización manual si hay una nueva versión disponible
+                menu.set_menu_name(updateManualButton, "Actualizar a v" .. currentVer) -- Cambiar el texto del botón a la nueva versión
             end
         else
             util.toast("[" .. scriptName .. "] Tu script ya está actualizado a v" .. localVer .. "")
@@ -686,8 +688,8 @@ menu.action(scriptInfoMenu, "Buscar Actualización", {}, "El script verificará 
     async_http.dispatch()
 end)
 
--- segundo botón de actualización (siempre visible pero inactivo)
-updateManualButton = menu.action(scriptInfoMenu, "Actualizar a " .. localVer .. "", {}, "Actualiza a la version más reciente." .. localVer .. "", function()
+-- segundo botón de actualización (siempre visible pero inactivo al inicio)
+updateManualButton = menu.action(scriptInfoMenu, "Actualizar a v" .. localVer, {}, "Actualiza a la versión más reciente.", function()
     if updateAvailable then
         async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/AFK_OP_Money.lua", function(a)
             if not a or a == "" then
@@ -701,7 +703,7 @@ updateManualButton = menu.action(scriptInfoMenu, "Actualizar a " .. localVer .. 
             if f then
                 f:write(a)
                 f:close()
-                util.toast("Script actualizado a v" .. localVer .. " Excelente :D")
+                util.toast("Script actualizado a v" .. currentVer .. " Excelente :D") -- Usar currentVer aquí
                 util.restart_script()
             else
                 util.toast("Error al guardar el script. Por favor, actualiza manualmente")
