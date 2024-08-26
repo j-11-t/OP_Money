@@ -2,7 +2,7 @@
 
 
 local response = false
-local localVer = 4.8
+local localVer = 4.9
 local scriptName = "AFK_OP_Money"
 local versionCheckInterval = 300000 -- 5 minutos
 local updateButtonCreated = false
@@ -666,7 +666,7 @@ menu.divider(scriptInfoMenu, "AFK_OP_Money")
 menu.readonly(scriptInfoMenu, "Versión", localVer)
 
 -- verificar actualizaciones manual
-menu.action(scriptInfoMenu, "Buscar Actualización", {}, "El script verificará automáticamente actualizaciones cada 5 minutos, pero puedes hacerlo manualmente con esta opción", function()
+menu.action(scriptInfoMenu, "Buscar actualización", {}, "El script verificará automáticamente actualizaciones cada 5 minutos, pero puedes hacerlo manualmente con esta opción", function()
     async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/AKF_OP_Money_Version.lua", function(output)
         currentVer = tonumber(output) -- Almacena el valor de currentVer globalmente
         if currentVer and localVer ~= currentVer then
