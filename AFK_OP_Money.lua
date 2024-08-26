@@ -2,7 +2,7 @@
 
 
 local response = false
-local localVer = 4.6
+local localVer = 4.7
 local scriptName = "AFK_OP_Money"
 local versionCheckInterval = 300000 -- 5 minutos
 local updateButtonCreated = false
@@ -589,7 +589,8 @@ local function checkForUpdates()
             util.toast("[" .. scriptName .. "] Hay una actualización disponible: v" .. currentVer .. " Actualiza lo más pronto posible :D")
             updateAvailable = true
             if not updateButtonCreated then
-                menu.action(menu.my_root(), "Actualizar Lua", {}, "", function()
+                -- Aquí agregamos el texto con la versión disponible
+                menu.action(menu.my_root(), "Actualizar Lua a v" .. currentVer, {}, "", function()
                     -- Verifica antes de descargar
                     async_http.init("raw.githubusercontent.com", "/j-11-t/OP_Money/main/AKF_OP_Money_Version.lua", function(newVersionOutput)
                         local latestVer = tonumber(newVersionOutput)
