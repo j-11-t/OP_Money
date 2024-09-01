@@ -2,7 +2,7 @@
 
 
 local response = false
-local localVer = 5
+local localVer = 5.1
 local scriptName = "AFK_OP_Money"
 local versionCheckInterval = 300000 -- 5 minutos
 local updateButtonCreated = false
